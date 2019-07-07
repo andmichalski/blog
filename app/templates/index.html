@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="static/css/app.css">
+    </head>
+    <body>
+        <div class="header">
+            <div class="title">
+                <img src="/static/images/python_logo.png"/>
+                <div class="header_text">
+                    <h1>Andrzej Michalski</h1>
+                    <h3>On software</h3>
+                </div>
+            </div>
+            <div class="menu">
+                <a href={{ url_for('about') }}><h2>About</h2></a>
+                <a><h2>Blog</h2></a>
+                <a><h2>Projects</h2></a>
+                <a><h2>Contact</h2></a>
+            </div>
+        </div>
+        <div class="context">
+            {% block context %}
+            <pre> This were post</pre>
+            <p>This will be a sample text</p>
+            {% endblock %}
+        </div>
+        <div class="footer">
+            <h3>Footer</h3>
+        </div>
+    </body>
+
+</html>

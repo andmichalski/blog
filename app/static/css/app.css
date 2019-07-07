@@ -1,0 +1,84 @@
+h1 { 
+    font-family: Ubuntu Mono; 
+    font-size: 40px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 700;
+    line-height: 26.4px;
+    } 
+h2 {
+    font-family: Ubuntu Mono;
+    font-size: 32px; font-style: normal;
+    font-variant: normal;
+    font-weight: 700;
+    line-height: 15.4px;
+    } 
+h3 { 
+    font-family: Ubuntu Mono;
+    font-size: 14px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 700;
+    line-height: 15.4px;
+    } 
+p { 
+    font-family: Ubuntu Mono;
+    font-size: 14px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 400;
+    line-height: 20px;
+    } 
+blockquote {
+    font-family: Ubuntu Mono;
+    font-size: 21px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 400;
+    line-height: 30px;
+    } 
+pre { 
+    font-family: Ubuntu Mono;
+    font-size: 13px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 400;
+    line-height: 18.5667px;
+    }
+
+a   {
+    text-decoration: none;
+    color: inherit;
+    }
+
+.title {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.title img {
+    width: 20%;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu {
+    width: 30%;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
+p {
+    white-space: pre-wrap;
+    font-size: 25px;
+    line-height: 150%;
+}
+
+img {
+    width: 20%;
+}
