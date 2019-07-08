@@ -8,14 +8,14 @@
                 <img src="/static/images/python_logo.png"/>
                 <div class="header_text">
                     <h1>Andrzej Michalski</h1>
-                    <h3>On software</h3>
+                    <h3>In software</h3>
                 </div>
             </div>
             <div class="menu">
                 <a href={{ url_for('about') }}><h2>About</h2></a>
-                <a><h2>Blog</h2></a>
-                <a><h2>Projects</h2></a>
-                <a><h2>Contact</h2></a>
+                <a href={{ url_for('blog') }}><h2>Blog</h2></a>
+                <a href={{ url_for('projects') }}><h2>Projects</h2></a>
+                <a href={{ url_for('contact') }}><h2>Contact</h2></a>
             </div>
         </div>
         <div class="context">
@@ -25,7 +25,7 @@
             {% endblock %}
         </div>
         <div class="footer">
-            <h3>Footer</h3>
+            <h3>© Andrzej Michalski</h3>
         </div>
     </body>
 

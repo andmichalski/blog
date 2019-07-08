@@ -73,6 +73,21 @@ a   {
     flex-flow: row wrap;
     justify-content: space-around;
 }
+
+.footer {
+    position: relative;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+.projects {
+    white-space: pre-wrap;
+    font-size: 15px;
+    line-height: 150%;
+}
+
 p {
     white-space: pre-wrap;
     font-size: 25px;
