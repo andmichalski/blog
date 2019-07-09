@@ -18,11 +18,16 @@
                 <a href={{ url_for('contact') }}><h2>Contact</h2></a>
             </div>
         </div>
-        <div class="context">
-            {% block context %}
-            <pre> This were post</pre>
-            <p>This will be a sample text</p>
-            {% endblock %}
+        <div class="main_window">
+            <div class="context">
+                {% block context %}
+                    <pre> This were post</pre>
+                    <p>This will be a sample text</p>
+                {% endblock %}
+            </div>
+            <div class="personal">
+                {% include 'personal.html' %}
+            </div>
         </div>
         <div class="footer">
             <h3>© Andrzej Michalski</h3>
