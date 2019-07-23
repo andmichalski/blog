@@ -1,7 +1,22 @@
 {% extends "index.html" %}
 {% block context %}
-<p>
-Context of blog
-
-</p>
+    {% for entry in entries %}
+    <table>
+        <tr valign="top">
+               <td style="padding-top: 50px">
+                   <h2>{{ entry.title }}</h2>
+               </td>
+        </tr>
+        <tr>
+            <td>
+                {% filter markdown %}
+                {{ entry.text|safe}}
+                {% endfilter %}
+            </td>
+        </tr>
+    </table>
+    {% else %}
+        <em>Unbelievable.  No entries here so far</em>
+    {% endfor %}
+    {{ pagination.links }}
 {% endblock %}

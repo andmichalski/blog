@@ -135,3 +135,12 @@ p {
     line-height: 150%;
 }
 
+.pagination ul {
+    padding-top: 30px;
+    display: flex;
+    font-size: 20px;
+    list-style-type: none;
+}
+.pagination a {
+    padding: 0 15px;
+}
