@@ -1,21 +1,13 @@
 import _sqlite3
 
 from flask import Flask, request, g, render_template
-from flask_paginate import Pagination, get_page_parameter
 from flask_misaka import Misaka
-
-DATABASE = 'app.db'
-DEBUG = True
-SECRET_KEY = 'development key'
-USERNAME = 'admin'
-PASSWORD = 'default'
+from flask_paginate import Pagination, get_page_parameter
 
 app = Flask(__name__)
-app.config.from_object(__name__)
-Misaka(app)
+app.config.from_object('config.LocalConfig')
+Misaka(app, fenced_code=True)
 
-
-#
 
 @app.before_request
 def before_request():
@@ -52,13 +44,10 @@ def blog():
     for row in cur.fetchall():
         title = row[0]
         if isinstance(row[1], bytes):
-            print('there are bytes')
             text = row[1].decode('utf-8')
         else:
             text = row[1]
         entries.append(dict(title=title, text=text))
-    print(entries)
-    print(page)
     page_entries = entries[(page - 1) * per_page:((page - 1) * per_page) + per_page]
     pagination = Pagination(page=page, per_page=per_page, total=len(entries), search=search,
                             record_name='entry')
