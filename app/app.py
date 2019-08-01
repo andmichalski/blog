@@ -1,4 +1,5 @@
 import sys
+
 path = "/".join(__file__.split("/")[:-2])
 sys.path.insert(0, path)
 

@@ -4,15 +4,15 @@
     </head>
     <body>
         <div class="header">
+            <a href={{ url_for('about') }}>
             <div class="title">
-	    <a href={{ url_for('about') }}> 
                 <img src="/static/images/python_logo.png"/>
                 <div class="header_text">
                     <h1>Andrzej Michalski</h1>
                     <h3>In software</h3>
                 </div>
-	    </a>
             </div>
+            </a>
             <div class="menu">
                 <a href={{ url_for('about') }}><h2>About</h2></a>
                 <a href={{ url_for('blog') }}><h2>Blog</h2></a>
