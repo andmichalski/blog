@@ -1,8 +1,3 @@
-import sys
-
-path = "/".join(__file__.split("/")[:-2])
-sys.path.insert(0, path)
-
 import _sqlite3
 
 from flask import Flask, request, g, render_template
