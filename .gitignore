@@ -3,3 +3,10 @@
 .vscode/
 __pycache__
 .venv/
+blog_posts/
+
+# Database SQLite
+*.db
+
+# Configuration files
+config.py

@@ -1,11 +1,16 @@
+import sys
+path = "/".join(__file__.split("/")[:-2])
+sys.path.insert(0, path)
+
 import _sqlite3
 
 from flask import Flask, request, g, render_template
 from flask_misaka import Misaka
 from flask_paginate import Pagination, get_page_parameter
+import config
 
 app = Flask(__name__)
-app.config.from_object('config.LocalConfig')
+app.config.from_object(config.ProductionConfig)
 Misaka(app, fenced_code=True)
 
 
