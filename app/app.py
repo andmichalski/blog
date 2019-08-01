@@ -29,12 +29,12 @@ def connect_db():
     return _sqlite3.connect(app.config['DATABASE'])
 
 
+@app.route("/")
 @app.route("/about")
 def about():
     return render_template("about.html")
 
 
-@app.route("/")
 @app.route('/blog')
 def blog():
     search = False
