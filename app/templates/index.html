@@ -1,10 +1,12 @@
 <html>
     <head>
+        {% block metadata %}{% endblock %}
+        <title>Andrzej Michalski - Python Developer</title>
         <link rel="stylesheet" type="text/css" href="static/css/app.css">
     </head>
     <body>
         <div class="header">
-            <a href={{ url_for('/') }}>
+            <a href={{ url_for('about') }}>
             <div class="title">
                 <img src="/static/images/python_logo.png"/>
                 <div class="header_text">

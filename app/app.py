@@ -25,7 +25,6 @@ def connect_db():
 
 
 @app.route("/")
-@app.route("/about")
 def about():
     return render_template("about.html")
 
