@@ -3,9 +3,11 @@ import _sqlite3
 from flask import Flask, request, g, render_template
 from flask_misaka import Misaka
 from flask_paginate import Pagination, get_page_parameter
+import config
 
 app = Flask(__name__)
 app.config.from_object('config.ProductionConfig')
+
 Misaka(app, fenced_code=True)
 
 
@@ -23,12 +25,11 @@ def connect_db():
     return _sqlite3.connect(app.config['DATABASE'])
 
 
-@app.route("/about")
+@app.route("/")
 def about():
     return render_template("about.html")
 
 
-@app.route("/")
 @app.route('/blog')
 def blog():
     search = False
@@ -66,3 +67,4 @@ def contact():
 
 if __name__ == '__main__':
     app.run()
+
