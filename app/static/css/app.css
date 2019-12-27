@@ -14,6 +14,8 @@ h2 {
     font-variant: normal;
     font-weight: 700;
     line-height: 15.4px;
+    text-decoration: none;
+    color:black;
 }
 
 h3 {
@@ -74,10 +76,15 @@ a {
 }
 
 .menu {
-    width: 30%;
+    width: 50%;
     display: flex;
     flex-flow: row wrap;
-    justify-content: space-around;
+    justify-content: flex-end;
+}
+
+.menu a {
+    padding-left: 2%;
+    padding-right: 2%;
 }
 
 .main_window {

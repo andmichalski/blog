@@ -40,19 +40,32 @@ def blog():
 
     page = request.args.get(get_page_parameter(), type=int, default=1)
 
-    cur = g.db.execute('select title, text from entries order by id desc')
+    cur = g.db.execute('select title, slug, text from entries order by id desc')
     entries = []
     for row in cur.fetchall():
         title = row[0]
-        if isinstance(row[1], bytes):
-            text = row[1].decode('utf-8')
+        slug = row[1]
+        if isinstance(row[2], bytes):
+            text = row[2].decode('utf-8')
         else:
-            text = row[1]
-        entries.append(dict(title=title, text=text))
+            text = row[2]
+        entries.append(dict(title=title, slug=slug, text=text))
     page_entries = entries[(page - 1) * per_page:((page - 1) * per_page) + per_page]
     pagination = Pagination(page=page, per_page=per_page, total=len(entries), search=search,
                             record_name='entry')
     return render_template('blog.html', entries=page_entries, pagination=pagination)
+
+@app.route('/<slug>/')
+def detail(slug):
+    cur = g.db.execute(f'select title, text from entries where slug="{slug}"')
+    entry_data = cur.fetchall()
+
+    title = entry_data[0][0]
+    text = entry_data[0][1].decode('utf-8')
+
+    entry = {"title": title, "text": text}
+
+    return render_template('detail.html', entry=entry)
 
 
 @app.route("/projects")

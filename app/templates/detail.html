@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+{% block context %}
+
+	<div class='Detail'>
+		<h2>{{ entry.title }} </h2>
+
+		{% filter markdown %}
+		{{ entry.text|safe}}
+		{% endfilter %}
+	</div>
+
+{% endblock %}
