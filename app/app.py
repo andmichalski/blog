@@ -6,7 +6,7 @@ from flask_paginate import Pagination, get_page_parameter
 import config
 
 app = Flask(__name__)
-app.config.from_object('config.LocalConfig')
+app.config.from_object('config.ProductionConfig')
 
 Misaka(app, fenced_code=True)
 
