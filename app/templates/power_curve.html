@@ -1,0 +1,36 @@
+{% extends "index.html" %}
+{% block context %}
+
+<h3> Power Curve for IN'RIDE 100 B'TWIN </h3>
+
+<br />
+
+<p>Calculate speed</p>
+<form name="calculateSpeedForm" action="javascript:;" onsubmit="calculateSpeed(this)">
+	<input type="text" name="userPower"> Watts <br/>
+    	<input type="submit" value="calculate">
+</form>
+
+<br />
+
+<p>Calculate power</p>
+<form name="calculatePowerForm" action="javascript:;" onsubmit="calculatePower(this)">
+	<input type="text" name="userSpeed"> km/h <br/>
+    	<input type="submit" value="calculate">
+</form>
+
+<br />
+
+<p>Calculate distance</p>
+<form name="calculateDistanceForm" action="javascript:;" onsubmit="calculateDistance(this)">
+	<input type="text" name="userPower"> Watts <br/>
+	<input type="time" name="userTime" step="2"> hh:mm:ss <br/>
+    	<input type="submit" value="calculate">
+</form>
+
+<script type=text/javascript src="/static/js/power_curve.js"></script>
+
+
+<img src="/static/images/plot.png"/>
+
+{% endblock %}

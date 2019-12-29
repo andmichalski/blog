@@ -6,7 +6,7 @@ from flask_paginate import Pagination, get_page_parameter
 import config
 
 app = Flask(__name__)
-app.config.from_object('config.ProductionConfig')
+app.config.from_object('config.LocalConfig')
 
 Misaka(app, fenced_code=True)
 
@@ -77,6 +77,9 @@ def projects():
 def contact():
     return render_template("contact.html")
 
+@app.route("/power_curve")
+def power_curve():
+    return render_template("power_curve.html")
 
 if __name__ == '__main__':
     app.run()
