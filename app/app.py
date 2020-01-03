@@ -77,6 +77,9 @@ def projects():
 def contact():
     return render_template("contact.html")
 
+@app.route("/power_curve")
+def power_curve():
+    return render_template("power_curve.html")
 
 if __name__ == '__main__':
     app.run()
