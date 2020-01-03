@@ -1,9 +1,22 @@
 {% extends "index.html" %}
 {% block context %}
 
-<h3> Power Curve for IN'RIDE 100 B'TWIN </h3>
+<h1> Power Curve for IN'RIDE 100 B'TWIN Indoor Trainer</h1>
 
-<br />
+<br/>
+<p> 
+The power curve is calculated based on my rides. Interwals, SweetSpot, Long and Recovery.
+Calculated speed to power and power to speed ratios could be different, 
+because they are base on polyomonial fit, which gave not equals results.
+
+There are three calculations performed:
+1. Calculate speed based on power
+2. Calculate power based on speed
+3. Calculate distance based on average power of ride
+
+At the bottom power curve image for IN'RIDE 100 B'TWIN Indoor Trainer is placed.
+</p>
+<br/>
 
 <p>Calculate speed</p>
 <form name="calculateSpeedForm" action="javascript:;" onsubmit="calculateSpeed(this)">
@@ -30,7 +43,8 @@
 
 <script type=text/javascript src="/static/js/power_curve.js"></script>
 
-
-<img src="/static/images/plot.png"/>
+<div class="ImagePowerCurve">
+	<img src="/static/images/plot.png"/>
+</div>
 
 {% endblock %}
