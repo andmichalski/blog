@@ -1,14 +1,15 @@
 import _sqlite3
-
-from flask import Flask, request, g, render_template
+import config
+from flask import Flask, g, render_template, request
 from flask_misaka import Misaka
 from flask_paginate import Pagination, get_page_parameter
-import config
 
 app = Flask(__name__)
 app.config.from_object('config.ProductionConfig')
 
 Misaka(app, fenced_code=True)
+
+STATIC_WEBSITES = ["power_curve_btwin_inride_100"]
 
 
 @app.before_request
@@ -40,7 +41,8 @@ def blog():
 
     page = request.args.get(get_page_parameter(), type=int, default=1)
 
-    cur = g.db.execute('select title, slug, text from entries order by id desc')
+    cur = g.db.execute(
+        'select title, slug, text from entries order by id desc')
     entries = []
     for row in cur.fetchall():
         title = row[0]
@@ -50,22 +52,28 @@ def blog():
         else:
             text = row[2]
         entries.append(dict(title=title, slug=slug, text=text))
-    page_entries = entries[(page - 1) * per_page:((page - 1) * per_page) + per_page]
+    page_entries = entries[(page - 1) *
+                           per_page:((page - 1) * per_page) + per_page]
     pagination = Pagination(page=page, per_page=per_page, total=len(entries), search=search,
                             record_name='entry')
     return render_template('blog.html', entries=page_entries, pagination=pagination)
 
+
 @app.route('/<slug>/')
 def detail(slug):
-    cur = g.db.execute(f'select title, text from entries where slug="{slug}"')
-    entry_data = cur.fetchall()
+    if slug in STATIC_WEBSITES:
+        url = f"{slug}.html"
+        return render_template(url)
+    else:
+        cur = g.db.execute(f'select title, text from entries where slug="{slug}"')
+        entry_data = cur.fetchall()
 
-    title = entry_data[0][0]
-    text = entry_data[0][1].decode('utf-8')
+        title = entry_data[0][0]
+        text = entry_data[0][1].decode('utf-8')
 
-    entry = {"title": title, "text": text}
+        entry = {"title": title, "text": text}
 
-    return render_template('detail.html', entry=entry)
+        return render_template('detail.html', entry=entry)
 
 
 @app.route("/projects")
@@ -77,10 +85,6 @@ def projects():
 def contact():
     return render_template("contact.html")
 
-@app.route("/power_curve")
-def power_curve():
-    return render_template("power_curve.html")
 
 if __name__ == '__main__':
     app.run()
-
