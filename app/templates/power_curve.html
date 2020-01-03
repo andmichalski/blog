@@ -1,0 +1,50 @@
+{% extends "index.html" %}
+{% block context %}
+
+<h1> Power Curve for IN'RIDE 100 B'TWIN Indoor Trainer</h1>
+
+<br/>
+<p> 
+The power curve is calculated based on my rides. Interwals, SweetSpot, Long and Recovery.
+Calculated speed to power and power to speed ratios could be different, 
+because they are base on polyomonial fit, which gave not equals results.
+
+There are three calculations performed:
+1. Calculate speed based on power
+2. Calculate power based on speed
+3. Calculate distance based on average power of ride
+
+At the bottom power curve image for IN'RIDE 100 B'TWIN Indoor Trainer is placed.
+</p>
+<br/>
+
+<p>Calculate speed</p>
+<form name="calculateSpeedForm" action="javascript:;" onsubmit="calculateSpeed(this)">
+	<input type="text" name="userPower"> Watts <br/>
+    	<input type="submit" value="calculate">
+</form>
+
+<br />
+
+<p>Calculate power</p>
+<form name="calculatePowerForm" action="javascript:;" onsubmit="calculatePower(this)">
+	<input type="text" name="userSpeed"> km/h <br/>
+    	<input type="submit" value="calculate">
+</form>
+
+<br />
+
+<p>Calculate distance</p>
+<form name="calculateDistanceForm" action="javascript:;" onsubmit="calculateDistance(this)">
+	<input type="text" name="userPower"> Watts <br/>
+	<input type="time" name="userTime" step="2"> hh:mm:ss <br/>
+    	<input type="submit" value="calculate">
+</form>
+
+<script type=text/javascript src="/static/js/power_curve.js"></script>
+
+<div class="ImagePowerCurve">
+	<img src="/static/images/plot.png"/>
+</div>
+
+{% endblock %}
