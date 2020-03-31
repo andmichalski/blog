@@ -1,0 +1,3 @@
+sqlite3 app.db insert into entries(title, text) values('Corrections',  readfile('test_text.txt'));
+sqlite3 app.db select text from entries where id=17;
+sqlite3 app.db update entries set text=readfile('text_to_edit.txt') where id=17;
