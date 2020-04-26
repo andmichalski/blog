@@ -144,16 +144,13 @@ def create():
             slug = request.form['slug']
             text = request.form['text']
             published = request.form.get('published') or False
+            # Add published value
 
             entry = {"title": title, "slug": slug, "text": text, "published": published}
 
-            # save entry in database
-
-            flash('Entry created successfully.', 'success')
-            if published:
-                return redirect(url_for('detail', slug=slug))
-            else:
-                return redirect(url_for('edit', slug=slug))
+            g.db.execute(f'insert into entries(title, text, slug) values("{title}", "{text}", "{slug}")')
+            g.db.commit()
+            return redirect(url_for('manage'))
         else:
             flash('Title and Content are required.', 'danger')
     else:
@@ -193,8 +190,10 @@ def edit(slug):
 
 @app.route('/<slug>/delete/', methods=['GET', 'POST'])
 @login_required
-def delete():
-    pass
+def delete(slug):
+    g.db.execute(f'delete from entries where slug = "{slug}"')
+    g.db.commit()
+    return redirect(url_for('manage'))
 
 
 if __name__ == '__main__':

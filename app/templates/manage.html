@@ -6,7 +6,8 @@
         <tr>
                <td>
 			<a href={{ url_for('detail', slug=entry.slug) }}>{{ entry.title }}</a>
-    			-- <a href={{ url_for('edit', slug=entry.slug) }}>Edit</a>
+    			  -- <a href={{ url_for('edit', slug=entry.slug) }}>Edit</a>
+    			  -- <a href={{ url_for('delete', slug=entry.slug) }}>Delete</a>
                </td>
         </tr>
     </table>
