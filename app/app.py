@@ -1,11 +1,14 @@
-import _sqlite3
-import config
-from flask import Flask, g, render_template, request
+import functools
+
+from flask import (Flask, flash, g, redirect, render_template, request,
+                   session, url_for)
 from flask_misaka import Misaka
 from flask_paginate import Pagination, get_page_parameter
 
+import _sqlite3
+
 app = Flask(__name__)
-app.config.from_object('config.ProductionConfig')
+app.config.from_object('config.LocalConfig')
 
 Misaka(app, fenced_code=True)
 
@@ -24,6 +27,51 @@ def teardown_request(exception):
 
 def connect_db():
     return _sqlite3.connect(app.config['DATABASE'])
+
+
+def login_required(fn):
+    @functools.wraps(fn)
+    def inner(*args, **kwargs):
+        if session.get('logged_in'):
+            return fn(*args, **kwargs)
+        return redirect(url_for('login', next=request.path))
+    return inner
+
+
+@app.route('/login/', methods=['GET', 'POST'])
+def login():
+    next_url = request.args.get('next') or request.form.get('next')
+    if request.method == 'POST' and request.form.get('password'):
+        password = request.form.get('password')
+        # if password == app.config['ADMIN_PASSWORD']:
+        if password == 'secret':
+            session['logged_in'] = True
+            session.permanent = True  # Use cookie to store session.
+            flash('You are now logged in.', 'success')
+            return redirect(next_url or url_for('manage'))
+        else:
+            flash('Incorrect password.', 'danger')
+    return render_template('login.html', next_url=next_url)
+
+
+@app.route('/logout/', methods=['GET', 'POST'])
+def logout():
+    if request.method == 'POST':
+        session.clear()
+        return redirect(url_for('about'))
+
+
+@app.route('/manage')
+@login_required
+def manage():
+    data = g.db.execute(
+        'select title, slug from entries order by id desc')
+    entries = []
+    for row in data.fetchall():
+        title = row[0]
+        slug = row[1]
+        entries.append(dict(title=title, slug=slug))
+    return render_template('manage.html', entries=entries)
 
 
 @app.route("/")
@@ -84,6 +132,69 @@ def projects():
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
+
+
+@app.route('/create/', methods=['GET', 'POST'])
+@login_required
+def create():
+    if request.method == 'POST':
+        if request.form.get('title') and request.form.get('text'):
+
+            title = request.form['title']
+            slug = request.form['slug']
+            text = request.form['text']
+            published = request.form.get('published') or False
+
+            entry = {"title": title, "slug": slug, "text": text, "published": published}
+
+            # save entry in database
+
+            flash('Entry created successfully.', 'success')
+            if published:
+                return redirect(url_for('detail', slug=slug))
+            else:
+                return redirect(url_for('edit', slug=slug))
+        else:
+            flash('Title and Content are required.', 'danger')
+    else:
+        entry = {}
+    return render_template('create.html', entry=entry)
+
+
+@app.route('/<slug>/edit/', methods=['GET', 'POST'])
+@login_required
+def edit(slug):
+
+    record = g.db.execute(f'select title, text from entries where slug="{slug}"')
+    entry_data = record.fetchall()
+
+    title = entry_data[0][0]
+    text = entry_data[0][1].decode('utf-8')
+
+    entry = {"title": title, "text": text}
+
+    if request.method == 'POST':
+        if request.form.get('title') and request.form.get('content'):
+            entry.title = request.form['title']
+            entry.content = request.form['content']
+            entry.published = request.form.get('published') or False
+            entry.save()
+
+            flash('Entry saved successfully.', 'success')
+            if entry.published:
+                return redirect(url_for('detail', slug=entry.slug))
+            else:
+                return redirect(url_for('edit', slug=entry.slug))
+        else:
+            flash('Title and Content are required.', 'danger')
+
+    return render_template('edit.html', entry=entry)
+
+
+@app.route('/<slug>/delete/', methods=['GET', 'POST'])
+@login_required
+def delete():
+    pass
 
 
 if __name__ == '__main__':

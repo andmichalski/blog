@@ -1,0 +1,16 @@
+{% extends "index.html" %}
+{% block context %}
+    <a href={{ url_for('create') }}><h3>Create new post</h3></a>
+    {% for entry in entries %}
+    <table>
+        <tr>
+               <td>
+			<a href={{ url_for('detail', slug=entry.slug) }}>{{ entry.title }}</a>
+    			-- <a href={{ url_for('edit', slug=entry.slug) }}>Edit</a>
+               </td>
+        </tr>
+    </table>
+    {% else %}
+        <em>Unbelievable.  No entries here so far</em>
+    {% endfor %}
+{% endblock %}
