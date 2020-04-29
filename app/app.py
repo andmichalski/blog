@@ -134,9 +134,7 @@ def contact():
     return render_template("contact.html")
 
 
-@app.route('/create/', methods=['GET', 'POST'])
-@login_required
-def create():
+def add_post(template, entry):
     if request.method == 'POST':
         if request.form.get('title') and request.form.get('text'):
 
@@ -146,16 +144,27 @@ def create():
             published = request.form.get('published') or False
             # Add published value
 
-            entry = {"title": title, "slug": slug, "text": text, "published": published}
+            entry = {"title": title, "slug": slug,
+                     "text": text, "published": published}
 
-            g.db.execute(f'insert into entries(title, text, slug) values("{title}", "{text}", "{slug}")')
-            g.db.commit()
+            post_exist = g.db.execute(f'select slug from entries where slug="{slug}"')
+            record = post_exist.fetchall()
+            if record != []:
+                g.db.execute(f'update entries set title="{title}", slug="{slug}", text="{text}" where slug="{slug}"')
+                g.db.commit()
+            else:
+                g.db.execute(f'insert into entries(title, text, slug) values("{title}", "{text}", "{slug}")')
+                g.db.commit()
             return redirect(url_for('manage'))
         else:
             flash('Title and Content are required.', 'danger')
-    else:
-        entry = {}
-    return render_template('create.html', entry=entry)
+    return render_template(template, entry=entry)
+
+
+@app.route('/create/', methods=['GET', 'POST'])
+@login_required
+def create():
+    return add_post('create.html', {'title': '', 'slug': '', 'text': ''})
 
 
 @app.route('/<slug>/edit/', methods=['GET', 'POST'])
@@ -166,26 +175,9 @@ def edit(slug):
     entry_data = record.fetchall()
 
     title = entry_data[0][0]
-    text = entry_data[0][1].decode('utf-8')
-
-    entry = {"title": title, "text": text}
-
-    if request.method == 'POST':
-        if request.form.get('title') and request.form.get('content'):
-            entry.title = request.form['title']
-            entry.content = request.form['content']
-            entry.published = request.form.get('published') or False
-            entry.save()
-
-            flash('Entry saved successfully.', 'success')
-            if entry.published:
-                return redirect(url_for('detail', slug=entry.slug))
-            else:
-                return redirect(url_for('edit', slug=entry.slug))
-        else:
-            flash('Title and Content are required.', 'danger')
-
-    return render_template('edit.html', entry=entry)
+    text = entry_data[0][1]
+    # text = entry_data[0][1].decode('utf-8')
+    return add_post('edit.html', {'title': title, 'slug': slug, 'text': text})
 
 
 @app.route('/<slug>/delete/', methods=['GET', 'POST'])
