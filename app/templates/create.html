@@ -31,7 +31,7 @@
       <div class="col-sm-offset-2 col-sm-10">
         <div class="checkbox">
           <label>
-            <input name="published" type="checkbox" value="y"{% if entry.published %} checked="checked"{% endif %}> Published?
+            <input name="published" type="checkbox" value="true"{% if entry.published == 'true' %} checked="checked"{% endif %}> Published?
           </label>
         </div>
       </div>

@@ -6,8 +6,10 @@
         <tr>
                <td>
 			<a href={{ url_for('detail', slug=entry.slug) }}>{{ entry.title }}</a>
+			-- ({% if entry.published == 'true' %} Published {% else %} Not Published {% endif %})
+
     			  -- <a href={{ url_for('edit', slug=entry.slug) }}>Edit</a>
-    			  -- <a href={{ url_for('delete', slug=entry.slug) }}>Delete</a>
+    			  -- <a href={{ url_for('delete', slug=entry.slug) }} onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
                </td>
         </tr>
     </table>
