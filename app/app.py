@@ -153,7 +153,7 @@ def add_post(template, entry):
                 g.db.execute(f'update entries set title="{title}", slug="{slug}", text="{text}" where slug="{slug}"')
                 g.db.commit()
             else:
-                g.db.execute(f'insert into entries(title, text, slug) values("{title}", "{text}", "{slug}")')
+                g.db.execute(f'insert into entries (title, slug, text) values ("{title}", "{slug}", "{text}")')
                 g.db.commit()
             return redirect(url_for('manage'))
         else:
@@ -175,8 +175,7 @@ def edit(slug):
     entry_data = record.fetchall()
 
     title = entry_data[0][0]
-    text = entry_data[0][1]
-    # text = entry_data[0][1].decode('utf-8')
+    text = '\n' + entry_data[0][1]
     return add_post('edit.html', {'title': title, 'slug': slug, 'text': text})
 
 
