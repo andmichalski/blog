@@ -18,6 +18,13 @@
                 <a href={{ url_for('projects') }}><h2>Projects</h2></a>
                 <a href={{ url_for('contact') }}><h2>Contact</h2></a>
             </div>
+	    <div class="log">
+		{% if session['logged_in'] %}
+		  <form action="{{ url_for('logout') }}" class="form-horizontal" method="post">
+		    <button class="btn btn-primary" type="submit">Log out</button>
+		  </form>
+		{% endif %}
+	    </div>
         </div>
         <div class="main_window">
             <div class="context">

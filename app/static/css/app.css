@@ -87,6 +87,12 @@ a {
     padding-right: 2%;
 }
 
+.log {
+    position:absolute;
+    right: 1vw;
+    top: 1vw;
+}
+
 .main_window {
     min-height: 83vh;
     display: flex;

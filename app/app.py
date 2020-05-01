@@ -1,8 +1,12 @@
-import _sqlite3
+import functools
 import config
-from flask import Flask, g, render_template, request
+
+from flask import (Flask, flash, g, redirect, render_template, request,
+                   session, url_for)
 from flask_misaka import Misaka
 from flask_paginate import Pagination, get_page_parameter
+
+import _sqlite3
 
 app = Flask(__name__)
 app.config.from_object('config.ProductionConfig')
@@ -26,6 +30,51 @@ def connect_db():
     return _sqlite3.connect(app.config['DATABASE'])
 
 
+def login_required(fn):
+    @functools.wraps(fn)
+    def inner(*args, **kwargs):
+        if session.get('logged_in'):
+            return fn(*args, **kwargs)
+        return redirect(url_for('login', next=request.path))
+    return inner
+
+
+@app.route('/login/', methods=['GET', 'POST'])
+def login():
+    next_url = request.args.get('next') or request.form.get('next')
+    if request.method == 'POST' and request.form.get('password'):
+        password = request.form.get('password')
+        if password == app.config['LOGIN_PASSWORD']:
+            session['logged_in'] = True
+            session.permanent = True  # Use cookie to store session.
+            flash('You are now logged in.', 'success')
+            return redirect(next_url or url_for('manage'))
+        else:
+            flash('Incorrect password.', 'danger')
+    return render_template('login.html', next_url=next_url)
+
+
+@app.route('/logout/', methods=['GET', 'POST'])
+def logout():
+    if request.method == 'POST':
+        session.clear()
+        return redirect(url_for('about'))
+
+
+@app.route('/manage')
+@login_required
+def manage():
+    data = g.db.execute(
+        'select title, slug, published from entries order by id desc')
+    entries = []
+    for row in data.fetchall():
+        title = row[0]
+        slug = row[1]
+        published = row[2]
+        entries.append(dict(title=title, slug=slug, published=published))
+    return render_template('manage.html', entries=entries)
+
+
 @app.route("/")
 def about():
     return render_template("about.html")
@@ -42,7 +91,7 @@ def blog():
     page = request.args.get(get_page_parameter(), type=int, default=1)
 
     cur = g.db.execute(
-        'select title, slug, text from entries order by id desc')
+        'select title, slug, text from entries where published = "true" order by id desc')
     entries = []
     for row in cur.fetchall():
         title = row[0]
@@ -69,7 +118,7 @@ def detail(slug):
         entry_data = cur.fetchall()
 
         title = entry_data[0][0]
-        text = entry_data[0][1].decode('utf-8')
+        text = entry_data[0][1]
 
         entry = {"title": title, "text": text}
 
@@ -84,6 +133,59 @@ def projects():
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
+
+
+def add_post(template, entry):
+    if request.method == 'POST':
+        if request.form.get('title') and request.form.get('text'):
+
+            title = request.form['title']
+            slug = request.form['slug']
+            text = request.form['text']
+            published = request.form.get('published') or False
+
+            post_exist = g.db.execute(f'select slug from entries where slug="{slug}"')
+            record = post_exist.fetchall()
+            if record != []:
+                g.db.execute(f'update entries set title="{title}", slug="{slug}", published="{published}", text="{text}" where slug="{slug}"')
+                g.db.commit()
+            else:
+                g.db.execute(f'insert into entries (title, slug, text, published) values ("{title}", "{slug}", "{text}", "{published}")')
+                g.db.commit()
+            return redirect(url_for('manage'))
+        else:
+            flash('Title and Content are required.', 'danger')
+    return render_template(template, entry=entry)
+
+
+@app.route('/create/', methods=['GET', 'POST'])
+@login_required
+def create():
+    return add_post('create.html', {'title': '', 'slug': '', 'text': ''})
+
+
+@app.route('/<slug>/edit/', methods=['GET', 'POST'])
+@login_required
+def edit(slug):
+
+    record = g.db.execute(f'select title, text, published from entries where slug="{slug}"')
+    entry_data = record.fetchall()
+
+    title = entry_data[0][0]
+    text = '\n' + entry_data[0][1]
+    published = entry_data[0][2]
+    return add_post('edit.html', {'title': title, 'slug': slug, 'text': text, 'published': published})
+
+
+@app.route('/<slug>/delete/', methods=['GET', 'POST'])
+@login_required
+def delete(slug):
+    data_to_delete = g.db.execute(f'select id from entries where slug = "{slug}"').fetchall()
+    if len(data_to_delete[0]) == 1:
+        id_to_remove = data_to_delete[0][0]
+        g.db.execute(f'delete from entries where id = "{id_to_remove}"')
+        g.db.commit()
+    return redirect(url_for('manage'))
 
 
 if __name__ == '__main__':
