@@ -1,4 +1,5 @@
 import functools
+import config
 
 from flask import (Flask, flash, g, redirect, render_template, request,
                    session, url_for)
